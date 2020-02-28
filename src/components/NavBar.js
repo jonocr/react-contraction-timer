@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from "./Auth";
 import firebaseApp from "./base";
 import { useHistory, Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
+// import { withRouter } from 'react-router';
 
 
 const useStyles = makeStyles(theme => ({
@@ -39,18 +39,24 @@ const NavBar = () => {
         history.push("/login");
     }
 
+    const signOut = () => {
+        console.log("signOut");
+        firebaseApp.auth().signOut();
+        goLogin();
+    }
+
 
     return (
         <AppBar position="static">
             <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <MenuIcon />
+                    {/* <MenuIcon /> */}
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
                     {welcomeMessage}
                 </Typography>
                 {currentUser ? (
-                    <Button color="inherit" onClick={() => firebaseApp.auth().signOut()}>Sign out </Button>
+                    <Button color="inherit" onClick={() => signOut()}>Sign out </Button>
                 ) : (
                         <Button color="inherit" onClick={() => goLogin()}>Login</Button>
                     )}
@@ -59,4 +65,5 @@ const NavBar = () => {
     )
 }
 
-export default withRouter(NavBar);
+export default NavBar;
+// export default withRouter(NavBar);

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import app from "./base";
 import '@firebase/firestore';
-// import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
+import { AuthContext } from "./Auth";
 
 const useStyles = makeStyles({
     // table: {
@@ -21,18 +21,19 @@ const useStyles = makeStyles({
 
 
 export const ContractionHistory = (props) => {
-    const [contractions, setContractions] = useState([]);
+    const { currentUser } = useContext(AuthContext);
+    // const [contractions, setContractions] = useState([]);
     const classes = useStyles();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const db = app.firestore();
-            const data = await db.collection('contractions').orderBy('startTime','desc').get();
-            setContractions(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-            console.log("data: ", data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-        }
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const db = app.firestore();
+    //         const data = await db.collection('contractions').orderBy('startTime', 'desc').get();
+    //         setContractions(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    //         // console.log("data: ", data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    //     }
+    //     fetchData();
+    // }, []);
 
     return (
         <Grid item xs={12}>
@@ -48,54 +49,68 @@ export const ContractionHistory = (props) => {
                             </Hidden>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {contractions.map(row => (
-                            <TableRow key={row.id}>
-                                <TableCell component="th" scope="row" className="table-tr">
-                                    {Math.floor((row.duration / (1000 * 60 * 60)) % 24) < 9 ? (
-                                        '0' + Math.floor((row.duration / (1000 * 60 * 60)) % 24)
-                                    ) : (
-                                            Math.floor((row.duration / (1000 * 60 * 60)) % 24)
-                                        )}:
+                    {currentUser ? (
+                        <TableBody>
+                            {props.data.map(row => (
+                                <TableRow key={row.id}>
+                                    <TableCell component="th" scope="row" className="table-tr">
+                                        {Math.floor((row.duration / (1000 * 60 * 60)) % 24) < 9 ? (
+                                            '0' + Math.floor((row.duration / (1000 * 60 * 60)) % 24)
+                                        ) : (
+                                                Math.floor((row.duration / (1000 * 60 * 60)) % 24)
+                                            )}:
                                     {Math.floor((row.duration / 1000 / 60) % 60) < 9 ? (
-                                        '0' + Math.floor((row.duration / 1000 / 60) % 60)
-                                    ):(
-                                        Math.floor((row.duration / 1000 / 60) % 60)
-                                    )}:
+                                            '0' + Math.floor((row.duration / 1000 / 60) % 60)
+                                        ) : (
+                                                Math.floor((row.duration / 1000 / 60) % 60)
+                                            )}:
                                     {Math.floor(row.duration / 1000 % 60) < 9 ? (
-                                        '0' + Math.floor(row.duration / 1000 % 60)
-                                    ): (
-                                        Math.floor(row.duration / 1000 % 60)
-                                    )}
-                                </TableCell>
-                                <TableCell align="right" className="table-tr">
-                                    {Math.floor((row.interval / (1000 * 60 * 60)) % 24) < 9 ? (
-                                        '0' + Math.floor((row.interval / (1000 * 60 * 60)) % 24)
-                                    ) : (
-                                            Math.floor((row.interval / (1000 * 60 * 60)) % 24)
-                                        )}:
+                                            '0' + Math.floor(row.duration / 1000 % 60)
+                                        ) : (
+                                                Math.floor(row.duration / 1000 % 60)
+                                            )}
+                                    </TableCell>
+                                    <TableCell align="right" className="table-tr">
+                                        {Math.floor((row.interval / (1000 * 60 * 60)) % 24) < 9 ? (
+                                            '0' + Math.floor((row.interval / (1000 * 60 * 60)) % 24)
+                                        ) : (
+                                                Math.floor((row.interval / (1000 * 60 * 60)) % 24)
+                                            )}:
                                     {Math.floor((row.interval / 1000 / 60) % 60) < 9 ? (
-                                        '0' + Math.floor((row.interval / 1000 / 60) % 60)
-                                    ):(
-                                        Math.floor((row.interval / 1000 / 60) % 60)
-                                    )}:
+                                            '0' + Math.floor((row.interval / 1000 / 60) % 60)
+                                        ) : (
+                                                Math.floor((row.interval / 1000 / 60) % 60)
+                                            )}:
                                     {Math.floor(row.interval / 1000 % 60) < 9 ? (
-                                        '0' + Math.floor(row.interval / 1000 % 60)
-                                    ): (
-                                        Math.floor(row.interval / 1000 % 60)
-                                    )}
-                                </TableCell>
-                                <Hidden only={['xs', 'sm', 'md']}>
-                                    <TableCell align="right" className="table-tr">
-                                        {new Date(row.startTime.seconds * 1000).toLocaleTimeString()}
+                                            '0' + Math.floor(row.interval / 1000 % 60)
+                                        ) : (
+                                                Math.floor(row.interval / 1000 % 60)
+                                            )}
                                     </TableCell>
-                                    <TableCell align="right" className="table-tr">
-                                        {new Date(row.endTime.seconds * 1000).toLocaleTimeString()}
-                                    </TableCell>
-                                </Hidden>
-                            </TableRow>
-                        ))}
-                    </TableBody>
+                                    <Hidden only={['xs', 'sm', 'md']}>
+                                        <TableCell align="right" className="table-tr">
+                                            {new Date(row.startTime.seconds * 1000).toLocaleTimeString()}
+                                        </TableCell>
+                                        <TableCell align="right" className="table-tr">
+                                            {new Date(row.endTime.seconds * 1000).toLocaleTimeString()}
+                                        </TableCell>
+                                    </Hidden>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    ) : (
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell className="table-tr"></TableCell>
+                                    <TableCell className="table-tr"></TableCell>
+                                    <Hidden only={['xs', 'sm', 'md']}>
+                                        <TableCell className="table-tr"></TableCell>
+                                        <TableCell className="table-tr"></TableCell>
+                                    </Hidden>
+                                </TableRow>
+                            </TableBody>
+                        )}
+
                 </Table>
             </TableContainer>
         </Grid>

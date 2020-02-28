@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import SignIn from '../SignIn';
+import { withRouter } from "react-router";
+import { AuthContext } from '../Auth';
+import { Redirect } from 'react-router-dom';
 
 export const Login = (props) => {
+    const { currentUser } = useContext(AuthContext);
+
     return (
         <div>
-            <SignIn></SignIn>
+            {currentUser ? (
+                <Redirect to={"/home"} />
+            ) : (
+                    <SignIn></SignIn>
+                )}
+
         </div>
     );
 };
 
-export default Login;
+export default withRouter(Login);

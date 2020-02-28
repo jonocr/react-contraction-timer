@@ -25,6 +25,7 @@ import '@firebase/firestore';
 
 
 export const Timer = (props) => {
+    const [contractions, setContractions] = useState([]);
     const { currentUser } = useContext(AuthContext);
     const [toogleButton, setToogleButton] = useState('start');
     const [timer, setTimer] = useState(0);
@@ -76,13 +77,13 @@ export const Timer = (props) => {
 
             //Save Data In DB            
             const db = app.firestore();
-            db.collection("contractions").add({ 
+            db.collection("contractions").add({
                 startTime: startTime,
                 endTime: stopMark,
                 interval: (startTime - lastContractionMark),
                 duration: (stopMark - startTime),
                 lastContraction: lastContraction,
-                user: currentUser.email            
+                user: currentUser.email
             });
 
             //Clears the Clock UI
@@ -118,6 +119,9 @@ export const Timer = (props) => {
             clearInterval(interval);
         }
 
+        //Get Contractions History
+        fetchData();
+
         //Component will unmount
         //Clear Interval
         return () => clearInterval(interval);
@@ -126,6 +130,13 @@ export const Timer = (props) => {
     const tick = () => {
         setTimer(timer + 1);
     };
+
+    const fetchData = async () => {
+        const db = app.firestore();
+        const data = await db.collection('contractions').orderBy('startTime', 'desc').get();
+        setContractions(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+        // console.log("data: ", data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    }
 
 
     return (
@@ -143,7 +154,7 @@ export const Timer = (props) => {
                 </div>
             </div>
 
-            <ContractionHistory data={history} ></ContractionHistory>
+            <ContractionHistory data={contractions} ></ContractionHistory>
         </div>
     )
 }
