@@ -120,7 +120,9 @@ export const Timer = (props) => {
         }
 
         //Get Contractions History
-        fetchData();
+        if (currentUser) {
+            fetchData();
+        }
 
         //Component will unmount
         //Clear Interval
@@ -133,7 +135,7 @@ export const Timer = (props) => {
 
     const fetchData = async () => {
         const db = app.firestore();
-        const data = await db.collection('contractions').orderBy('startTime', 'desc').get();
+        const data = await db.collection('contractions').where("user", "==", currentUser.email).orderBy('startTime', 'desc').get();
         setContractions(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
         // console.log("data: ", data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
     }

@@ -14,9 +14,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     firebaseApp.auth().onAuthStateChanged(setCurrentUser);
     // const unsubscribe = firebaseApp.auth().onAuthStateChange(onChange);
-    // return () => {
-    //   unsubscribe();
-    // }
+    return () => {
+      firebaseApp.auth().signOut();
+    }
   }, []);
  
   return (

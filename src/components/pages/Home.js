@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from "../Auth";
 import { Timer } from "../Timer";
+import { Redirect } from 'react-router-dom';
 // import { ContractionHistory } from "../ContractionHistory";
 
 export const Home = (props) => {
@@ -13,13 +14,14 @@ export const Home = (props) => {
 
                 {currentUser ? (
                     <div><h5>Welcome: {currentUser.email}</h5></div>
-                ) : (
-                        <div><h5>This is Home</h5></div>
+                ) : (                       
+                        <Redirect to="/login" />                       
                     )}
 
                 <br></br>
                 <Timer></Timer>
                 {/* <ContractionHistory></ContractionHistory> */}
+                  {/* <div><h5>This is Home</h5></div> */}
             </div>
         </div>
     )
