@@ -3,42 +3,17 @@ import { ContractionHistory } from "./ContractionHistory";
 import { AuthContext } from "./Auth";
 import app from "./base";
 import '@firebase/firestore';
-
-// days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-// hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-// minutes: Math.floor((difference / 1000 / 60) % 60),
-// seconds: Math.floor((difference / 1000) % 60)
-
-// React.useEffect(() => {
-//     const fetchData = async () => {
-//       const db = firebase.firestore();
-//       const data = await db.collection("spells").get();
-//       setSpells(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-//     };
-//     fetchData();
-//   }, []);
-
-//   const onCreate = () => {
-//     const db = firebase.firestore();
-//     db.collection("spells").add({ name: newSpellName });
-//   };
-
+import { Bar, Line } from 'react-chartjs-2';
 
 export const Timer = (props) => {
     const [contractions, setContractions] = useState([]);
     const { currentUser } = useContext(AuthContext);
-    const [toogleButton, setToogleButton] = useState('start');
+    const [toogleButton, setToogleButton] = useState('START');
     const [timer, setTimer] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [hours, setHours] = useState(0);
-    // const [days, setDays] = useState(0);
     const [key, setkey] = useState(0);
-
-    // console.log("username: ", JSON.stringify(currentUser.email));
-
-
-
     const [startTime, setStartTime] = useState(null);
     const [lastContraction, setLastContraction] = useState(null);
     const [endTime, setEndTime] = useState(null);
@@ -46,15 +21,15 @@ export const Timer = (props) => {
 
 
     const handleTimerClick = (e) => {
-        toogleButton === 'start' ? setToogleButton('stop') : setToogleButton('start');
+        toogleButton === 'START' ? setToogleButton('STOP') : setToogleButton('START');
         //When timer starts
-        if (toogleButton === 'start') {
+        if (toogleButton === 'START') {
             setStartTime(new Date());
             setkey(key + 1);
         }
 
         //Timer stops
-        if (toogleButton === 'stop') {
+        if (toogleButton === 'STOP') {
             let lastContractionMark = lastContraction;
             const stopMark = new Date();
 
@@ -107,7 +82,7 @@ export const Timer = (props) => {
 
         //component did mount 
         //Start clock
-        if (toogleButton === 'stop') {
+        if (toogleButton === 'STOP') {
             interval = setInterval(tick, 1000);
             setSeconds(Math.floor(timer % 60));
             setMinutes(Math.floor((timer / 60) % 60));
@@ -115,7 +90,7 @@ export const Timer = (props) => {
         }
 
         //Stop Clock
-        if (toogleButton === 'start') {
+        if (toogleButton === 'START') {
             clearInterval(interval);
         }
 
@@ -137,9 +112,39 @@ export const Timer = (props) => {
         const db = app.firestore();
         const data = await db.collection('contractions').where("user", "==", currentUser.email).orderBy('startTime', 'desc').get();
         setContractions(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-        // console.log("data: ", data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+        // console.log('%c Contractions Data: ', 'background: orange; color: white; font-weight: bold; display:block;');
+        // console.table(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
     }
+    const min = contractions.map((c) => {
+        return ((c.interval / 1000 / 60) % 60);
+    });
 
+    const data = {
+        labels: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'],
+        datasets: [
+            {
+                label: 'Contraction Interval',
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: 'rgba(75,192,192,0.4)',
+                borderColor: 'rgba(75,192,192,1)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: 'rgba(75,192,192,1)',
+                pointBackgroundColor: '#fff',
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                pointHoverBorderColor: 'rgba(220,220,220,1)',
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: min.reverse()
+            }
+        ]
+    };
 
     return (
         <div>
@@ -155,7 +160,7 @@ export const Timer = (props) => {
                     </p>
                 </div>
             </div>
-
+            <Line data={data}> </Line>
             <ContractionHistory data={contractions} ></ContractionHistory>
         </div>
     )

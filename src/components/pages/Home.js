@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from "../Auth";
 import { Timer } from "../Timer";
 import { Redirect } from 'react-router-dom';
-// import { ContractionHistory } from "../ContractionHistory";
 
 export const Home = (props) => {
     const { currentUser } = useContext(AuthContext);
@@ -10,7 +9,7 @@ export const Home = (props) => {
     return (
         <div className="center-div">
             <div className="center-children">
-                <h1>Home</h1>
+                <h1>TIMER</h1>
 
                 {currentUser ? (
                     <div><h5>Welcome: {currentUser.email}</h5></div>
@@ -20,8 +19,6 @@ export const Home = (props) => {
 
                 <br></br>
                 <Timer></Timer>
-                {/* <ContractionHistory></ContractionHistory> */}
-                  {/* <div><h5>This is Home</h5></div> */}
             </div>
         </div>
     )
