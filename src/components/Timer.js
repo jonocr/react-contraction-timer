@@ -4,18 +4,69 @@ import { AuthContext } from "./Auth";
 import app from "./base";
 import '@firebase/firestore';
 import { Line } from 'react-chartjs-2';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
-const useStyles = makeStyles({
+/*
+*Tabs 
+*/
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <Typography
+            component="div"
+            role="tabpanel"
+            hidden={value !== index}
+            id={`full-width-tabpanel-${index}`}
+            aria-labelledby={`full-width-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box p={3}>{children}</Box>}
+        </Typography>
+    );
+}
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+    return {
+        id: `full-width-tab-${index}`,
+        'aria-controls': `full-width-tabpanel-${index}`,
+    };
+}
+
+const useStyles = makeStyles(theme => ({
     root: {
+        backgroundColor: theme.palette.background.paper,
         flexGrow: 1,
     },
-});
+}));
 
+// const useStyles = makeStyles({
+//     root: {
+//         flexGrow: 1,
+//     },
+// });
+
+/*
+*Timer
+*/
 export const Timer = (props) => {
+    //Material Tabs
+    const classes = useStyles();
+    const theme = useTheme();
+    const [value, setValue] = React.useState(0);
+    //Timer
     const [contractions, setContractions] = useState([]);
     const { currentUser } = useContext(AuthContext);
     const [toogleButton, setToogleButton] = useState('START');
@@ -28,6 +79,11 @@ export const Timer = (props) => {
     const [lastContraction, setLastContraction] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [history, setHistory] = useState([]);
+
+
+    const handleTabChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
 
     const handleTimerClick = (e) => {
@@ -170,10 +226,32 @@ export const Timer = (props) => {
                     </p>
                 </div>
             </div>
-            <div className="line-chart">
-                <Line data={data}> </Line>
+            <div className={classes.root}>
+                <AppBar position="static" color="default">
+                    <Tabs
+                        value={value}
+                        onChange={handleTabChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="fullWidth"
+                        aria-label="full width tabs example"
+                    >
+                        <Tab label="CONTRACTIONS LOG" {...a11yProps(0)} />
+                        <Tab label="INTERVALS CHART" {...a11yProps(1)} />
+                    </Tabs>
+                </AppBar>
+                <TabPanel value={value} index={0} dir={theme.direction}>
+                    <ContractionHistory data={contractions} ></ContractionHistory>
+                </TabPanel>
+                <TabPanel value={value} index={1} dir={theme.direction}>
+
+                    <div id="line-chart" className="line-chart">
+                        <Line data={data}> </Line>
+                    </div>
+                </TabPanel>
             </div>
-            <ContractionHistory data={contractions} ></ContractionHistory>
+
+
         </div>
     )
 }

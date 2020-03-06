@@ -13,6 +13,9 @@ App-header {
 
 .center-children {
   text-align: center;
+  h1 {
+    margin-bottom: 0px;
+  }
 }
 
 .btn-circle {
@@ -49,14 +52,29 @@ tr {
 
 
 //ChartJS Line
-  .line-chart{
+  #line-chart{
     display: block;
-    max-width: 85%;
     margin: auto;
+    @media (min-width: #{map-get($breakpoints, 'medium')}) {
+      max-width: 85%;
+    }
     canvas {
-      .chartjs-render-monitor {
+      &.chartjs-render-monitor {
         height: 400px;
       }
     }
   }
 
+//Tab Content
+#full-width-tabpanel-0 {
+  .MuiBox-root{
+    padding: 0px;
+  }
+}
+
+
+#full-width-tabpanel-1{
+  .MuiBox-root{
+    padding: 20px 0 0;
+  }
+}
