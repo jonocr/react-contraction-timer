@@ -9,10 +9,11 @@ export const Home = (props) => {
     return (
         <div className="center-div">
             <div className="center-children">
+                 {/* <div><h5>Welcome: {currentUser.email}</h5></div> */}
                 <h1>TIMER</h1>
 
                 {currentUser ? (
-                    <div><h5>Welcome: {currentUser.email}</h5></div>
+                    <div></div>                   
                 ) : (                       
                         <Redirect to="/login" />                       
                     )}

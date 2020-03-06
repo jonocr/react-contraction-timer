@@ -3,7 +3,17 @@ import { ContractionHistory } from "./ContractionHistory";
 import { AuthContext } from "./Auth";
 import app from "./base";
 import '@firebase/firestore';
-import { Bar, Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+const useStyles = makeStyles({
+    root: {
+        flexGrow: 1,
+    },
+});
 
 export const Timer = (props) => {
     const [contractions, setContractions] = useState([]);
@@ -120,7 +130,7 @@ export const Timer = (props) => {
     });
 
     const data = {
-        labels: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'],
+        labels: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'],
         datasets: [
             {
                 label: 'Contraction Interval',
@@ -151,16 +161,18 @@ export const Timer = (props) => {
             <div className="center-div">
                 <div className="center-children">
                     <a href="#" className="btn-circle" onClick={(e) => handleTimerClick(e)}>{toogleButton}</a>
-                    <p>
+                    {/* <p>
                         Timer: {hours}:{minutes}:{seconds}
                     </p>
-                    <br></br>
+                    <br></br> */}
                     <p>
                         Hours: {hours}  Minutes: {minutes}  Seconds: {seconds}
                     </p>
                 </div>
             </div>
-            <Line data={data}> </Line>
+            <div className="line-chart">
+                <Line data={data}> </Line>
+            </div>
             <ContractionHistory data={contractions} ></ContractionHistory>
         </div>
     )
