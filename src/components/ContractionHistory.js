@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
-import app from "./base";
+import React, { useContext } from 'react';
 import '@firebase/firestore';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import SignIn from '../SignIn';
 import { withRouter } from "react-router";
 import { AuthContext } from '../Auth';

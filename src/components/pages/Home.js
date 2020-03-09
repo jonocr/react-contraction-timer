@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from "../Auth";
 import { Timer } from "../Timer";
 import { Redirect } from 'react-router-dom';
@@ -9,13 +9,11 @@ export const Home = (props) => {
     return (
         <div className="center-div">
             <div className="center-children">
-                 {/* <div><h5>Welcome: {currentUser.email}</h5></div> */}
-                <h1>TIMER</h1>
 
                 {currentUser ? (
-                    <div></div>                   
-                ) : (                       
-                        <Redirect to="/login" />                       
+                    <h1>TIMER</h1>
+                ) : (
+                        <Redirect to="/login" />
                     )}
 
                 <br></br>

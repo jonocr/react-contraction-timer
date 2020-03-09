@@ -65,7 +65,7 @@ export const Timer = (props) => {
     //Material Tabs
     const classes = useStyles();
     const theme = useTheme();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
     //Timer
     const [contractions, setContractions] = useState([]);
     const { currentUser } = useContext(AuthContext);
@@ -105,6 +105,7 @@ export const Timer = (props) => {
                 lastContractionMark = startTime;
             }
 
+            //TODO Check this state
             setEndTime(stopMark);
             const contraction = {
                 startTime: startTime,
@@ -217,10 +218,6 @@ export const Timer = (props) => {
             <div className="center-div">
                 <div className="center-children">
                     <a href="#" className="btn-circle" onClick={(e) => handleTimerClick(e)}>{toogleButton}</a>
-                    {/* <p>
-                        Timer: {hours}:{minutes}:{seconds}
-                    </p>
-                    <br></br> */}
                     <p>
                         Hours: {hours}  Minutes: {minutes}  Seconds: {seconds}
                     </p>

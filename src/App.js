@@ -1,23 +1,22 @@
-import React, { useContext, useEffect } from "react";
-import { BrowserRouter as Router, Route, useHistory } from "react-router-dom";
+// import React, { useContext, useEffect } from "react";
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import NavBar from './components/NavBar';
 import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
 import Test from "./components/pages/Test";
 import './main.css';
 import PrivateRoute from "./components/pages/PrivateRoute";
-import { AuthContext } from "./components/Auth";
+// import { AuthContext } from "./components/Auth";
 
 function App() { 
-  const { currentUser } = useContext(AuthContext);
-  // let history = useHistory();
+  // const { currentUser } = useContext(AuthContext);
 
-  useEffect(()=>{
-    if (currentUser) {
-      console.log("user exist", currentUser.email);
-      // history.push("/home");
-    }
-  },[]);
+  // useEffect(()=>{
+  //   if (currentUser) {
+  //     console.log("user exist", currentUser.email);
+  //   }
+  // },[]);
 
   return (
     <div className="App">    
