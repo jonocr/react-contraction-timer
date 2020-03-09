@@ -52,12 +52,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-// const useStyles = makeStyles({
-//     root: {
-//         flexGrow: 1,
-//     },
-// });
-
 /*
 *Timer
 */
