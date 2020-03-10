@@ -17,7 +17,7 @@ export const Home = (props) => {
                     )}
 
                 <br></br>
-                {/* <Timer></Timer> */}
+                <Timer></Timer>
             </div>
         </div>
     )
