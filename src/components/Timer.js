@@ -208,6 +208,39 @@ export const Timer = (props) => {
     };
 
     return (
-        <div>Timer JS</div>
+        <div>
+            <div className="center-div">
+                <div className="center-children">
+                    <a href="#" className="btn-circle" onClick={(e) => handleTimerClick(e)}>{toogleButton}</a>
+                    <p>
+                        Hours: {hours}  Minutes: {minutes}  Seconds: {seconds}
+                    </p>
+                </div>
+            </div>
+            <div className={classes.root}>
+                <AppBar position="static" color="default">
+                    <Tabs
+                        value={value}
+                        onChange={handleTabChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="fullWidth"
+                        aria-label="full width tabs example"
+                    >
+                        <Tab label="CONTRACTIONS LOG" {...a11yProps(0)} />
+                        <Tab label="INTERVALS CHART" {...a11yProps(1)} />
+                    </Tabs>
+                </AppBar>
+                <TabPanel value={value} index={0} dir={theme.direction}>
+                    <ContractionHistory data={contractions} ></ContractionHistory>
+                </TabPanel>
+                <TabPanel value={value} index={1} dir={theme.direction}>
+
+                    <div id="line-chart" className="line-chart">
+                        <Line data={data}> </Line>
+                    </div>
+                </TabPanel>
+            </div>
+        </div> 
     )
 }
