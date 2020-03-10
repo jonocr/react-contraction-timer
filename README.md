@@ -2,12 +2,18 @@ This project keeps the log of contractions of a pregnant woman. It is as simple 
 
 This app was developed with React Hooks, React Routes, Material UI, Sass, ChartJS, Firebase Auth, Firestore, Gulp. It is responsive.
 
-## Setup
+## Live Demo
+
+https://react-contraction-timer.herokuapp.com
+
+user: test@test.com
+
+password: @13579test
+
+### Setup
+
+To run this local you need to install nodejs in your computer first then:
 
 1. Run npm install
 
 2. Run npm start
-
-
-
-
