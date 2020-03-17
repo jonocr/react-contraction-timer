@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { withRouter } from "react-router";
-import app from "./base.js";
+import app from "../base.js";
 // import { AuthContext } from "./Auth.js";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -20,8 +20,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/jonocr">
+        Jono's Github
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -49,26 +49,28 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignIn = ({history}) => {
+const SignUp = ({ history }) => {
   const classes = useStyles();
 
-  const handleLogin = useCallback(
+  const handleSignUp = useCallback(
     async event => {
       event.preventDefault();
-      const { email, password } = event.target.elements;
-      try {
-        await app
-          .auth()
-          .signInWithEmailAndPassword(email.value, password.value);
-        history.push("/home"); 
-      } catch (error) {
-        alert(error);
-      } 
+      const { email, password, passwordConfirmation } = event.target.elements;
+      if (password.value === passwordConfirmation.value) {
+        try {
+          await app
+            .auth()
+            .createUserWithEmailAndPassword(email.value, password.value);
+          history.push("/login");
+        } catch (error) {
+          alert(error);
+        }
+      } else {
+        alert("Password doesn't match");
+      }
     },
     [history]
   );
-
-  // const { currentUser } = useContext(AuthContext);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -78,9 +80,9 @@ const SignIn = ({history}) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Resgistration
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleLogin}>
+        <form className={classes.form} noValidate onSubmit={handleSignUp}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -89,7 +91,6 @@ const SignIn = ({history}) => {
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
             autoFocus
           />
           <TextField
@@ -101,11 +102,16 @@ const SignIn = ({history}) => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="passwordConfirmation"
+            label="Password Confirmation"
+            type="password"
+            id="passwordConfirmation"
           />
           <Button
             type="submit"
@@ -117,14 +123,9 @@ const SignIn = ({history}) => {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
-              <Link href="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link href="/login" variant="body2">
+                {"Already have an account? Sign In"}
               </Link>
             </Grid>
           </Grid>
@@ -137,4 +138,4 @@ const SignIn = ({history}) => {
   );
 }
 
-export default withRouter(SignIn);
+export default withRouter(SignUp);
