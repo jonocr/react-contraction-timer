@@ -21,18 +21,7 @@ const useStyles = makeStyles({
 
 export const ContractionHistory = (props) => {
     const { currentUser } = useContext(AuthContext);
-    // const [contractions, setContractions] = useState([]);
     const classes = useStyles();
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const db = app.firestore();
-    //         const data = await db.collection('contractions').orderBy('startTime', 'desc').get();
-    //         setContractions(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-    //         // console.log("data: ", data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-    //     }
-    //     fetchData();
-    // }, []);
 
     return (
         <Grid item xs={12}>

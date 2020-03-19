@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 /*
-*Tabs 
+*TabPanel 
 */
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -72,13 +72,17 @@ export const Timer = (props) => {
     const [startTime, setStartTime] = useState(null);
     const [lastContraction, setLastContraction] = useState(null);
     const [endTime, setEndTime] = useState(null);
-    const [history, setHistory] = useState([]);
+    // const [history, setHistory] = useState([]);
+    const [chartData, setChartData] = useState([]);
 
 
     const handleTabChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    const handleChartClick = (e) => {
+        setChartData(loadChart());
+    }
 
     const handleTimerClick = (e) => {
         toogleButton === 'START' ? setToogleButton('STOP') : setToogleButton('START');
@@ -101,15 +105,15 @@ export const Timer = (props) => {
 
             //TODO Check this state
             setEndTime(stopMark);
-            const contraction = {
-                startTime: startTime,
-                endTime: stopMark,
-                interval: (startTime - lastContractionMark),
-                duration: (stopMark - startTime),
-                lastContraction: lastContraction,
-                id: key,
-                user: currentUser.email
-            }
+            // const contraction = {
+            //     startTime: startTime,
+            //     endTime: stopMark,
+            //     interval: (startTime - lastContractionMark),
+            //     duration: (stopMark - startTime),
+            //     lastContraction: lastContraction,
+            //     id: key,
+            //     user: currentUser.email
+            // }
 
             //Save Data In DB            
             const db = app.firestore();
@@ -123,17 +127,14 @@ export const Timer = (props) => {
             });
 
             //Clears the Clock UI
-            setSeconds(0);
-            setMinutes(0);
-            setHours(0);
-            setTimer(0);
+            clearClock();
 
             //Next Last Contraction is the previous Start Time
             setLastContraction(startTime);
 
             //Save History
-            history.push(contraction);
-            setHistory(history);
+            // history.push(contraction);
+            // setHistory(history);
         }
     };
 
@@ -165,26 +166,53 @@ export const Timer = (props) => {
         return () => clearInterval(interval);
     }, [timer, toogleButton]);
 
-    const tick = () => {
+    const tick = () => { 
         setTimer(timer + 1);
     };
 
+    const clearClock = () => {
+        setSeconds(0);
+        setMinutes(0);
+        setHours(0);
+        setTimer(0);
+    };
+
     const fetchData = async () => {
+        console.log("dentro de fetchData");
+        let info = [];
         const db = app.firestore();
         const data = await db.collection('contractions').where("user", "==", currentUser.email).orderBy('startTime', 'desc').get();
-        setContractions(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+        info = data.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setContractions(info);
         // console.log('%c Contractions Data: ', 'background: orange; color: white; font-weight: bold; display:block;');
         // console.table(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
     }
-    const min = contractions.map((c) => {
-        return ((c.interval / 1000 / 60) % 60);
-    });
+
+    const loadChart = () => {
+        let contractionLength = contractions.length;
+        let min = contractions;
+
+        min = contractionLength > 10 ? 
+        min.reverse().slice(contractionLength - 10).map((c) => {
+            // console.log("slice: ",contractions.reverse().slice(contractionLength - 10));
+            // return ((c.interval / 1000 / 60) % 60);
+            return (c.interval);
+        })
+        : min.map((c) => {
+            return ((c.interval / 1000 / 60) % 60);
+        });
+        console.log("Data for chart: ", min);
+
+        return min;
+    }
+
+
 
     const data = {
-        labels: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'],
+        labels: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'].reverse(),
         datasets: [
             {
-                label: 'Contraction Interval',
+                label: 'Contraction Interval Per Hour',
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -202,7 +230,7 @@ export const Timer = (props) => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: min.reverse()
+                data: chartData
             }
         ]
     };
@@ -228,7 +256,7 @@ export const Timer = (props) => {
                         aria-label="full width tabs example"
                     >
                         <Tab label="CONTRACTIONS LOG" {...a11yProps(0)} />
-                        <Tab label="INTERVALS CHART" {...a11yProps(1)} />
+                        <Tab label="INTERVALS CHART" {...a11yProps(1)} onClick={(e) => handleChartClick(e)} />
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0} dir={theme.direction}>
