@@ -72,7 +72,6 @@ export const Timer = (props) => {
     const [startTime, setStartTime] = useState(null);
     const [lastContraction, setLastContraction] = useState(null);
     const [endTime, setEndTime] = useState(null);
-    // const [history, setHistory] = useState([]);
     const [chartData, setChartData] = useState([]);
 
 
@@ -105,15 +104,6 @@ export const Timer = (props) => {
 
             //TODO Check this state
             setEndTime(stopMark);
-            // const contraction = {
-            //     startTime: startTime,
-            //     endTime: stopMark,
-            //     interval: (startTime - lastContractionMark),
-            //     duration: (stopMark - startTime),
-            //     lastContraction: lastContraction,
-            //     id: key,
-            //     user: currentUser.email
-            // }
 
             //Save Data In DB            
             const db = app.firestore();
@@ -132,9 +122,6 @@ export const Timer = (props) => {
             //Next Last Contraction is the previous Start Time
             setLastContraction(startTime);
 
-            //Save History
-            // history.push(contraction);
-            // setHistory(history);
         }
     };
 
@@ -166,7 +153,7 @@ export const Timer = (props) => {
         return () => clearInterval(interval);
     }, [timer, toogleButton]);
 
-    const tick = () => { 
+    const tick = () => {
         setTimer(timer + 1);
     };
 
@@ -189,20 +176,11 @@ export const Timer = (props) => {
     }
 
     const loadChart = () => {
-        let contractionLength = contractions.length;
-        let min = contractions;
-
-        min = contractionLength > 10 ? 
-        min.reverse().slice(contractionLength - 10).map((c) => {
-            // console.log("slice: ",contractions.reverse().slice(contractionLength - 10));
-            // return ((c.interval / 1000 / 60) % 60);
-            return (c.interval);
-        })
-        : min.map((c) => {
-            return ((c.interval / 1000 / 60) % 60);
-        });
-        console.log("Data for chart: ", min);
-
+        const min = [];
+        let i;
+        for (let i = 0; i < 10; i++) {
+            min.push((contractions[i].interval / 1000 / 60) % 60);
+        }
         return min;
     }
 
@@ -269,6 +247,6 @@ export const Timer = (props) => {
                     </div>
                 </TabPanel>
             </div>
-        </div> 
+        </div>
     )
 }
