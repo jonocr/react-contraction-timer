@@ -14,7 +14,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Alert from '@material-ui/lab/Alert';
 
 function Copyright() {
   return (
@@ -128,7 +127,6 @@ const SignIn = ({ history }) => {
           </Grid>
         </form>
       </div>
-      <Alert severity="success">This is a success alert — check it out!</Alert>
       <Box mt={8}>
         <Copyright />
       </Box>
