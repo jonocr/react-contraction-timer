@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { withRouter } from "react-router";
 import app from "./base.js";
-// import { AuthContext } from "./Auth.js";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,6 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
 
 function Copyright() {
   return (
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignIn = ({history}) => {
+const SignIn = ({ history }) => {
   const classes = useStyles();
 
   const handleLogin = useCallback(
@@ -60,15 +60,13 @@ const SignIn = ({history}) => {
         await app
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
-        history.push("/home"); 
+        history.push("/home");
       } catch (error) {
         alert(error);
-      } 
+      }
     },
     [history]
   );
-
-  // const { currentUser } = useContext(AuthContext);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -118,7 +116,7 @@ const SignIn = ({history}) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="/reset#" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
@@ -130,6 +128,7 @@ const SignIn = ({history}) => {
           </Grid>
         </form>
       </div>
+      <Alert severity="success">This is a success alert — check it out!</Alert>
       <Box mt={8}>
         <Copyright />
       </Box>
