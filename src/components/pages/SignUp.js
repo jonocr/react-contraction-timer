@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { withRouter } from "react-router";
 import app from "../base.js";
-// import { AuthContext } from "./Auth.js";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
