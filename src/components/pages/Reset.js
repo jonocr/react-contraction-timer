@@ -12,6 +12,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Collapse from '@material-ui/core/Collapse';
 
 function Copyright() {
     return (
@@ -44,10 +48,20 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    root: {
+      width: '100%',
+      '& > * + *': {
+        marginTop: theme.spacing(2),
+      },
+    },
 }));
 
 const PasswordReset = ({ history }) => {
     const classes = useStyles();
+    const [openError, setOpenError] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState("");
+    const [openAlert, setOpenAlert] = React.useState(false);
+    const [alertMsg, setAlertMsg] = React.useState("");
 
     const handleReset = useCallback(
         async event => {
@@ -58,14 +72,20 @@ const PasswordReset = ({ history }) => {
                 await app
                     .auth()
                     .sendPasswordResetEmail(email.value)
-                    .then(function() {
+                    .then(function () {
                         // Email sent.
-                      }).catch(function(error) {
-                        // An error happened.
-                      });
+                        setOpenAlert(true);
+                        setAlertMsg(`Reset password for ${email.value} was sent to your email`);
+                    }).catch(function (error) {
+                        setOpenError(true);
+                        setErrorMsg(error.message);
+                        return false;
+                    });
                 //history.push("/login");
             } catch (error) {
-                alert(error);
+                setOpenError(true);
+                setErrorMsg(error.message);
+                return false;
             }
 
         },
@@ -74,6 +94,39 @@ const PasswordReset = ({ history }) => {
 
     return (
         <Container component="main" maxWidth="xs">
+        <div className={classes.root}>
+        <Collapse in={openAlert}>
+          <Alert action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpenAlert(false);
+                history.push("/login");
+              }}>
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }> 
+            {alertMsg}
+      </Alert>
+        </Collapse>
+        <Collapse in={openError}>
+          <Alert severity="error" action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpenError(false);
+              }}>
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }> 
+            {errorMsg}
+      </Alert>
+        </Collapse>
+      </div>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
