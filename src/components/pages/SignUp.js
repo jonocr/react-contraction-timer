@@ -81,7 +81,7 @@ const SignUp = ({ history }) => {
         } catch (error) {
           setOpenError(true);
           setErrorMsg(error.message);
-          return;
+          return false;
         }
       } else {
         setOpenError(true);
