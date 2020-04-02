@@ -14,6 +14,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Collapse from '@material-ui/core/Collapse';
 
 function Copyright() {
   return (
@@ -46,10 +50,18 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 const SignIn = ({ history }) => {
   const classes = useStyles();
+  const [openError, setOpenError] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState("");
 
   const handleLogin = useCallback(
     async event => {
@@ -61,7 +73,9 @@ const SignIn = ({ history }) => {
           .signInWithEmailAndPassword(email.value, password.value);
         history.push("/home");
       } catch (error) {
-        alert(error);
+        setOpenError(true);
+        setErrorMsg(error.message);
+        return false;
       }
     },
     [history]
@@ -69,6 +83,23 @@ const SignIn = ({ history }) => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <div className={classes.root}>
+        <Collapse in={openError}>
+          <Alert severity="error" action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpenError(false);
+              }}>
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }>
+            {errorMsg}
+          </Alert>
+        </Collapse>
+      </div>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

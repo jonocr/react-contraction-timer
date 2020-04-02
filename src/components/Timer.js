@@ -102,9 +102,6 @@ export const Timer = (props) => {
                 lastContractionMark = startTime;
             }
 
-            //TODO Check this state
-            setEndTime(stopMark);
-
             //Save Data In DB            
             const db = app.firestore();
             db.collection("contractions").add({
@@ -129,7 +126,6 @@ export const Timer = (props) => {
     useEffect(() => {
         let interval = null;
 
-        //component did mount 
         //Start clock
         if (toogleButton === 'STOP') {
             interval = setInterval(tick, 1000);
@@ -148,8 +144,6 @@ export const Timer = (props) => {
             fetchData();
         }
 
-        //Component will unmount
-        //Clear Interval
         return () => clearInterval(interval);
     }, [timer, toogleButton]);
 
@@ -165,7 +159,6 @@ export const Timer = (props) => {
     };
 
     const fetchData = async () => {
-        console.log("dentro de fetchData");
         let info = [];
         const db = app.firestore();
         const data = await db.collection('contractions').where("user", "==", currentUser.email).orderBy('startTime', 'desc').get();
@@ -178,7 +171,9 @@ export const Timer = (props) => {
     const loadChart = () => {
         const min = [];
         let i;
-        for (let i = 0; i < 10; i++) {
+        let maxDisplay = 0;
+        contractions.length < 10 ? maxDisplay = contractions.length : maxDisplay = 10;
+        for (let i = 0; i < maxDisplay; i++) {
             min.push((contractions[i].interval / 1000 / 60) % 60);
         }
         return min;
