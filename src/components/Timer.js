@@ -71,7 +71,6 @@ export const Timer = (props) => {
     const [key, setkey] = useState(0);
     const [startTime, setStartTime] = useState(null);
     const [lastContraction, setLastContraction] = useState(null);
-    const [endTime, setEndTime] = useState(null);
     const [chartData, setChartData] = useState([]);
 
 
@@ -173,7 +172,7 @@ export const Timer = (props) => {
         let i;
         let maxDisplay = 0;
         contractions.length < 10 ? maxDisplay = contractions.length : maxDisplay = 10;
-        for (let i = 0; i < maxDisplay; i++) {
+        for (i = 0; i < maxDisplay; i++) {
             min.push((contractions[i].interval / 1000 / 60) % 60);
         }
         return min;
